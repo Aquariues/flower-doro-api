@@ -15,6 +15,7 @@ func GetFlowersTable(ctx *context.Context) table.Table {
 	info := flowers.GetInfo()
 	info.AddField("ID", "id", db.Int).FieldSortable()
 	info.AddField("Kind", "kind", db.Varchar).FieldSortable().FieldFilterable(types.FilterType{Operator: types.FilterOperatorLike})
+	info.AddField("Sort Order", "sort_order", db.Int).FieldSortable()
 	info.AddField("English Name", "english_name", db.Varchar).FieldFilterable(types.FilterType{Operator: types.FilterOperatorLike})
 	info.AddField("Vietnamese Name", "vietnamese_name", db.Varchar).FieldFilterable(types.FilterType{Operator: types.FilterOperatorLike})
 	info.AddField("Rarity", "rarity", db.Varchar).FieldFilterable()
@@ -25,10 +26,17 @@ func GetFlowersTable(ctx *context.Context) table.Table {
 	formList := flowers.GetForm()
 	formList.AddField("ID", "id", db.Int, form.Default).FieldNotAllowAdd().FieldNotAllowEdit()
 	formList.AddField("Kind", "kind", db.Varchar, form.Text)
+	formList.AddField("Sort Order", "sort_order", db.Int, form.Number)
 	formList.AddField("English Name", "english_name", db.Varchar, form.Text)
 	formList.AddField("Vietnamese Name", "vietnamese_name", db.Varchar, form.Text)
 	formList.AddField("English Description", "english_description", db.Text, form.TextArea)
 	formList.AddField("Vietnamese Description", "vietnamese_description", db.Text, form.TextArea)
+	formList.AddField("English Fact 1", "english_fact_1", db.Text, form.TextArea)
+	formList.AddField("English Fact 2", "english_fact_2", db.Text, form.TextArea)
+	formList.AddField("English Fact 3", "english_fact_3", db.Text, form.TextArea)
+	formList.AddField("Vietnamese Fact 1", "vietnamese_fact_1", db.Text, form.TextArea)
+	formList.AddField("Vietnamese Fact 2", "vietnamese_fact_2", db.Text, form.TextArea)
+	formList.AddField("Vietnamese Fact 3", "vietnamese_fact_3", db.Text, form.TextArea)
 	formList.AddField("Rarity", "rarity", db.Varchar, form.SelectSingle).FieldOptions(rarityOptions()).FieldDefault("common")
 	formList.AddField("Asset Name", "asset_name", db.Varchar, form.Text)
 	formList.AddField("Created At", "created_at", db.Timestamp, form.Default).FieldNotAllowAdd().FieldNotAllowEdit()
@@ -61,11 +69,56 @@ func GetUsersTable(ctx *context.Context) table.Table {
 	return users
 }
 
+func GetUserSettingsTable(ctx *context.Context) table.Table {
+	settings := newTable(ctx, db.Varchar, "user_id")
+
+	info := settings.GetInfo()
+	info.AddField("User ID", "user_id", db.Varchar).FieldSortable().FieldFilterable()
+	info.AddField("Work Minutes", "work_minutes", db.Int).FieldSortable()
+	info.AddField("Break Minutes", "break_minutes", db.Int).FieldSortable()
+	info.AddField("Clock Style", "clock_style", db.Varchar).FieldFilterable()
+	info.AddField("Updated At", "updated_at", db.Timestamp).FieldSortable()
+	info.SetTable("user_settings").SetTitle("User Settings").SetDescription("Timer settings snapshot")
+
+	formList := settings.GetForm()
+	formList.AddField("User ID", "user_id", db.Varchar, form.Text)
+	formList.AddField("Work Minutes", "work_minutes", db.Int, form.Number).FieldDefault("30")
+	formList.AddField("Break Minutes", "break_minutes", db.Int, form.Number).FieldDefault("5")
+	formList.AddField("Clock Style", "clock_style", db.Varchar, form.SelectSingle).FieldOptions(clockStyleOptions()).FieldDefault("gardenBed")
+	formList.AddField("Created At", "created_at", db.Timestamp, form.Default).FieldNotAllowAdd().FieldNotAllowEdit()
+	formList.AddField("Updated At", "updated_at", db.Timestamp, form.Default).FieldNotAllowAdd().FieldNotAllowEdit()
+	formList.SetTable("user_settings").SetTitle("User Settings").SetDescription("Timer settings snapshot")
+
+	return settings
+}
+
+func GetGardensTable(ctx *context.Context) table.Table {
+	gardens := newTable(ctx, db.Varchar, "id")
+
+	info := gardens.GetInfo()
+	info.AddField("ID", "id", db.Varchar).FieldSortable()
+	info.AddField("User ID", "user_id", db.Varchar).FieldFilterable()
+	info.AddField("User Name", "user_name", db.Varchar).FieldFilterable(types.FilterType{Operator: types.FilterOperatorLike})
+	info.AddField("Updated At", "updated_at", db.Timestamp).FieldSortable()
+	info.SetTable("gardens").SetTitle("Gardens").SetDescription("One garden per app user")
+
+	formList := gardens.GetForm()
+	formList.AddField("ID", "id", db.Varchar, form.Default).FieldNotAllowAdd().FieldNotAllowEdit()
+	formList.AddField("User ID", "user_id", db.Varchar, form.Text)
+	formList.AddField("User Name", "user_name", db.Varchar, form.Text).FieldDefault("You")
+	formList.AddField("Created At", "created_at", db.Timestamp, form.Default).FieldNotAllowAdd().FieldNotAllowEdit()
+	formList.AddField("Updated At", "updated_at", db.Timestamp, form.Default).FieldNotAllowAdd().FieldNotAllowEdit()
+	formList.SetTable("gardens").SetTitle("Gardens").SetDescription("One garden per app user")
+
+	return gardens
+}
+
 func GetGardenFlowersTable(ctx *context.Context) table.Table {
 	gardenFlowers := newTable(ctx, db.Varchar, "id")
 
 	info := gardenFlowers.GetInfo()
 	info.AddField("ID", "id", db.Varchar).FieldSortable()
+	info.AddField("Garden ID", "garden_id", db.Varchar).FieldFilterable()
 	info.AddField("User ID", "user_id", db.Varchar).FieldFilterable()
 	info.AddField("Flower Kind", "flower_kind", db.Varchar).FieldFilterable(types.FilterType{Operator: types.FilterOperatorLike})
 	info.AddField("Focus Minutes", "focus_minutes", db.Int).FieldSortable()
@@ -74,6 +127,7 @@ func GetGardenFlowersTable(ctx *context.Context) table.Table {
 
 	formList := gardenFlowers.GetForm()
 	formList.AddField("ID", "id", db.Varchar, form.Default).FieldNotAllowAdd().FieldNotAllowEdit()
+	formList.AddField("Garden ID", "garden_id", db.Varchar, form.Text)
 	formList.AddField("User ID", "user_id", db.Varchar, form.Text)
 	formList.AddField("Flower Kind", "flower_kind", db.Varchar, form.Text)
 	formList.AddField("Focus Session ID", "focus_session_id", db.Varchar, form.Text)
@@ -142,5 +196,13 @@ func localeOptions() types.FieldOptions {
 	return types.FieldOptions{
 		{Text: "Tiếng Việt", Value: "vi"},
 		{Text: "English", Value: "en"},
+	}
+}
+
+func clockStyleOptions() types.FieldOptions {
+	return types.FieldOptions{
+		{Text: "Garden Bed", Value: "gardenBed"},
+		{Text: "Outline", Value: "outline"},
+		{Text: "Petal", Value: "petal"},
 	}
 }

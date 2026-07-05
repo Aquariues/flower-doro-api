@@ -17,6 +17,12 @@ cp .env.example .env
 docker compose -f docker-compose.dev.yml up --build
 ```
 
+Run migrations explicitly when needed:
+
+```sh
+make migrate-up
+```
+
 Open:
 
 - API health: http://localhost:8080/healthz
@@ -83,6 +89,7 @@ POST /api/v1/users/:id/flowers
 
 - Postgres is the only supported runtime database.
 - `AUTO_MIGRATE=true` creates and updates API tables at startup.
+- Versioned SQL migrations live in `migrations/` and are embedded for app startup.
 - GoAdmin also stores its admin metadata in the same Postgres database.
 
 ## Contributor Docs

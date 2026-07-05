@@ -9,6 +9,9 @@ prod:
 build:
 	go build ./cmd/server
 
+migrate-up:
+	go run ./cmd/migrate
+
 test:
 	go test ./...
 
@@ -17,4 +20,3 @@ tidy:
 
 docker-build:
 	docker build -t flower-doro-api:local .
-

@@ -61,6 +61,8 @@ func Generators() map[string]table.Generator {
 	return map[string]table.Generator{
 		"flowers":        GetFlowersTable,
 		"users":          GetUsersTable,
+		"user_settings":  GetUserSettingsTable,
+		"gardens":        GetGardensTable,
 		"garden_flowers": GetGardenFlowersTable,
 		"focus_sessions": GetFocusSessionsTable,
 	}

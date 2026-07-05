@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS garden_flowers;
+DROP TABLE IF EXISTS focus_sessions;
+DROP TABLE IF EXISTS gardens;
+DROP TABLE IF EXISTS user_settings;
+DROP TABLE IF EXISTS flowers;
+DROP TABLE IF EXISTS users;
+DROP EXTENSION IF EXISTS pgcrypto;

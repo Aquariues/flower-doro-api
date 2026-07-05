@@ -124,7 +124,9 @@ INSERT INTO public.goadmin_menu (id, parent_id, type, "order", title, plugin_nam
     (9, 8, 1, 1, 'Flower Catalog', '', NULL, 'fa-pagelines', '/info/flowers', now(), now()),
     (10, 8, 1, 2, 'Garden Flowers', '', NULL, 'fa-envira', '/info/garden_flowers', now(), now()),
     (11, 8, 1, 3, 'Focus Sessions', '', NULL, 'fa-clock-o', '/info/focus_sessions', now(), now()),
-    (12, 8, 1, 4, 'App Users', '', NULL, 'fa-mobile', '/info/users', now(), now())
+    (12, 8, 1, 4, 'App Users', '', NULL, 'fa-mobile', '/info/users', now(), now()),
+    (13, 8, 1, 5, 'Gardens', '', NULL, 'fa-tree', '/info/gardens', now(), now()),
+    (14, 8, 1, 6, 'User Settings', '', NULL, 'fa-sliders', '/info/user_settings', now(), now())
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.goadmin_permissions (id, name, slug, http_method, http_path, created_at, updated_at) VALUES
@@ -145,6 +147,8 @@ INSERT INTO public.goadmin_role_menu (role_id, menu_id, created_at, updated_at) 
     (1, 10, now(), now()),
     (1, 11, now(), now()),
     (1, 12, now(), now()),
+    (1, 13, now(), now()),
+    (1, 14, now(), now()),
     (2, 7, '2019-09-10 00:00:00', '2019-09-10 00:00:00')
 ON CONFLICT (role_id, menu_id) DO NOTHING;
 
@@ -169,7 +173,7 @@ INSERT INTO public.goadmin_users (id, username, password, name, avatar, remember
     (2, 'operator', '$2a$10$rVqkOzHjN2MdlEprRflb1eGP0oZXuSrbJLOmJagFsCd81YZm0bsh.', 'Operator', '', NULL, '2019-09-10 00:00:00', '2019-09-10 00:00:00')
 ON CONFLICT (id) DO NOTHING;
 
-SELECT setval('public.goadmin_menu_myid_seq', 12, true);
+SELECT setval('public.goadmin_menu_myid_seq', GREATEST((SELECT COALESCE(MAX(id), 14) FROM public.goadmin_menu), 14), true);
 SELECT setval('public.goadmin_permissions_myid_seq', 2, true);
 SELECT setval('public.goadmin_roles_myid_seq', 2, true);
 SELECT setval('public.goadmin_users_myid_seq', 2, true);

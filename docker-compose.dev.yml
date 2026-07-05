@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: flower-doro-api-postgres-dev
+    environment:
+      POSTGRES_DB: flowerdoro
+      POSTGRES_USER: flowerdoro
+      POSTGRES_PASSWORD: flowerdoro
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - flower_doro_api_pg_dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flowerdoro -d flowerdoro"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flower-doro-api-dev
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      APP_ENV: development
+      HTTP_ADDR: :8080
+      DATABASE_URL: postgres://flowerdoro:flowerdoro@postgres:5432/flowerdoro?sslmode=disable
+      ADMIN_DATABASE_URL: postgres://flowerdoro:flowerdoro@postgres:5432/flowerdoro?sslmode=disable
+      GOADMIN_PREFIX: admin
+      GOADMIN_TITLE: FlowerDoro Admin
+      GOADMIN_LANGUAGE: en
+      AUTO_MIGRATE: "true"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+
+volumes:
+  flower_doro_api_pg_dev:

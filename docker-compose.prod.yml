@@ -1,0 +1,45 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-flowerdoro}
+      POSTGRES_USER: ${POSTGRES_USER:-flowerdoro}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+    volumes:
+      - flower_doro_api_pg_prod:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-flowerdoro} -d ${POSTGRES_DB:-flowerdoro}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    image: ${FLOWER_DORO_API_IMAGE:-ghcr.io/aquariues/flower-doro-api:latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      APP_ENV: production
+      HTTP_ADDR: :8080
+      DATABASE_URL: postgres://${POSTGRES_USER:-flowerdoro}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-flowerdoro}?sslmode=disable
+      ADMIN_DATABASE_URL: postgres://${POSTGRES_USER:-flowerdoro}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-flowerdoro}?sslmode=disable
+      GOADMIN_PREFIX: ${GOADMIN_PREFIX:-admin}
+      GOADMIN_TITLE: ${GOADMIN_TITLE:-FlowerDoro Admin}
+      GOADMIN_LANGUAGE: ${GOADMIN_LANGUAGE:-en}
+      AUTO_MIGRATE: ${AUTO_MIGRATE:-true}
+    ports:
+      - "${HTTP_PORT:-8080}:8080"
+    volumes:
+      - flower_doro_api_uploads:/app/uploads
+      - flower_doro_api_logs:/app/logs
+
+volumes:
+  flower_doro_api_pg_prod:
+  flower_doro_api_uploads:
+  flower_doro_api_logs:
+

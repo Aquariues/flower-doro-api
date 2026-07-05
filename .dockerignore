@@ -1,0 +1,13 @@
+.git
+.env
+.env.*
+!.env.example
+bin
+data
+dist
+logs
+tmp
+uploads
+*.log
+.DS_Store
+

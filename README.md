@@ -84,3 +84,9 @@ POST /api/v1/users/:id/flowers
 - Postgres is the only supported runtime database.
 - `AUTO_MIGRATE=true` creates and updates API tables at startup.
 - GoAdmin also stores its admin metadata in the same Postgres database.
+
+## Contributor Docs
+
+- Agent/project guide: `CLAUDE.md`
+- Git workflow: `docs/GIT_WORKFLOW.md`
+- Release playbook: `docs/RELEASE_SKILL.md`

@@ -46,6 +46,8 @@ type Flower struct {
 	VietnameseFact3       string    `gorm:"type:text" json:"vietnamese_fact_3"`
 	Rarity                string    `gorm:"size:40;default:common" json:"rarity"`
 	AssetName             string    `gorm:"size:120" json:"asset_name"`
+	ImageURL              string    `gorm:"type:text" json:"image_url"`
+	ThumbnailURL          string    `gorm:"type:text" json:"thumbnail_url"`
 	CreatedAt             time.Time `json:"created_at"`
 	UpdatedAt             time.Time `json:"updated_at"`
 }

@@ -20,6 +20,8 @@ func GetFlowersTable(ctx *context.Context) table.Table {
 	info.AddField("Vietnamese Name", "vietnamese_name", db.Varchar).FieldFilterable(types.FilterType{Operator: types.FilterOperatorLike})
 	info.AddField("Rarity", "rarity", db.Varchar).FieldFilterable()
 	info.AddField("Asset Name", "asset_name", db.Varchar)
+	info.AddField("Image URL", "image_url", db.Text)
+	info.AddField("Thumbnail URL", "thumbnail_url", db.Text)
 	info.AddField("Updated At", "updated_at", db.Timestamp).FieldSortable()
 	info.SetTable("flowers").SetTitle("Flowers").SetDescription("Flower catalog")
 
@@ -39,6 +41,8 @@ func GetFlowersTable(ctx *context.Context) table.Table {
 	formList.AddField("Vietnamese Fact 3", "vietnamese_fact_3", db.Text, form.TextArea)
 	formList.AddField("Rarity", "rarity", db.Varchar, form.SelectSingle).FieldOptions(rarityOptions()).FieldDefault("common")
 	formList.AddField("Asset Name", "asset_name", db.Varchar, form.Text)
+	formList.AddField("Image URL", "image_url", db.Text, form.Text)
+	formList.AddField("Thumbnail URL", "thumbnail_url", db.Text, form.Text)
 	formList.AddField("Created At", "created_at", db.Timestamp, form.Default).FieldNotAllowAdd().FieldNotAllowEdit()
 	formList.AddField("Updated At", "updated_at", db.Timestamp, form.Default).FieldNotAllowAdd().FieldNotAllowEdit()
 	formList.SetTable("flowers").SetTitle("Flowers").SetDescription("Flower catalog")

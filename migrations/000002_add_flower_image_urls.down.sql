@@ -1,0 +1,3 @@
+ALTER TABLE flowers DROP COLUMN IF EXISTS thumbnail_url;
+ALTER TABLE flowers DROP COLUMN IF EXISTS image_url;
+

@@ -82,6 +82,8 @@ type createFlowerRequest struct {
 	VietnameseFacts       []string `json:"vietnamese_facts"`
 	Rarity                string   `json:"rarity"`
 	AssetName             string   `json:"asset_name"`
+	ImageURL              string   `json:"image_url"`
+	ThumbnailURL          string   `json:"thumbnail_url"`
 }
 
 func (api API) createFlower(c *gin.Context) {
@@ -105,6 +107,8 @@ func (api API) createFlower(c *gin.Context) {
 		VietnameseFact3:       sliceValue(req.VietnameseFacts, 2),
 		Rarity:                defaultString(req.Rarity, "common"),
 		AssetName:             req.AssetName,
+		ImageURL:              req.ImageURL,
+		ThumbnailURL:          req.ThumbnailURL,
 	}
 	if err := api.db.Create(&flower).Error; err != nil {
 		c.JSON(http.StatusConflict, gin.H{"error": err.Error()})

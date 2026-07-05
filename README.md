@@ -1,6 +1,7 @@
 # FlowerDoro API
 
 Go + Postgres API for storing FlowerDoro users, flower catalog data, gardens, and earned flower rewards.
+Flower image binaries should live in S3 or compatible object storage; Postgres stores the public/object URLs on each flower.
 
 ## Stack
 
@@ -75,6 +76,8 @@ GET /api/v1/flowers/:kind
 POST /api/v1/flowers
 ```
 
+Flower records include `asset_name`, `image_url`, and `thumbnail_url`. Use `asset_name` as the app/local fallback and S3 URLs for API-driven images.
+
 ### Users
 
 ```http
@@ -97,3 +100,4 @@ POST /api/v1/users/:id/flowers
 - Agent/project guide: `CLAUDE.md`
 - Git workflow: `docs/GIT_WORKFLOW.md`
 - Release playbook: `docs/RELEASE_SKILL.md`
+- Flower image storage: `docs/FLOWER_IMAGES.md`

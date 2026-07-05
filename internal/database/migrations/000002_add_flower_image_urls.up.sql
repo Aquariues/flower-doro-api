@@ -1,0 +1,3 @@
+ALTER TABLE flowers ADD COLUMN IF NOT EXISTS image_url text NOT NULL DEFAULT '';
+ALTER TABLE flowers ADD COLUMN IF NOT EXISTS thumbnail_url text NOT NULL DEFAULT '';
+
